@@ -1,0 +1,53 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Admin categories list
+{% endblock %}
+
+{% block content1 %}
+    <form action="{{ url_for('admin_objects_delete_endpoint', model='category') }}" method="post">
+        <div id="snackbar" class="snackbar">ID Copied!</div>
+
+        <table class="table table-hover text-center">
+            <tr>
+                <th scope="col"><input class="form-check-input" type="checkbox" id="masterCheckbox"
+                                       aria-label="delete"> Delete
+                </th>
+                <th scope="col"></th>
+                <th scope="col" class="text-start">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Slug</th>
+            </tr>
+            {% for category in categories %}
+                <tr class="table-row" data-href="{{ url_for('admin_category_edit_endpoint', _id=category._id) }}">
+                    <td><input class="form-check-input mt-0 childCheckbox" type="checkbox" name="delete"
+                               aria-label="to-delete-checkbox" value="{{ category._id }}"></td>
+                    <td class="text-end"><a href="#" data-bs-toggle="tooltip" data-bs-title="Click to copy ID"
+                                            class="text-decoration-none text-dark id-copy-link"
+                                            id="{{ category._id }}">⧉</a></td>
+                    <td class="table-link-child text-start">{{ category._id }}</td>
+                    <td class="table-link-child">{{ category.name }}</td>
+                    <td class="table-link-child">{{ category.slug }}</td>
+
+
+                </tr>
+
+            {% endfor %}
+            <tr class="table-row">
+                <td class="table-info table-link"
+                    data-href="{{ url_for('admin_category_create_endpoint') }}" colspan="9">
+                    Add new category
+                </td>
+            </tr>
+            <tr class="table-row" style="transform: rotate(0);">
+                <td colspan="10" class="table-danger p-0">
+                    <button type="submit" class="btn stretched-link submit-button"
+                            disabled>Delete selected
+                    </button>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+    <script src="{{ url_for('static', path='js/list_rows_delete.js') }}"></script>
+{% endblock %}

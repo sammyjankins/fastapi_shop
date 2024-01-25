@@ -1,0 +1,143 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>Your shopping cart</h1>
+
+        <table class="table table-secondary">
+            <thead>
+            <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Remove</th>
+                <th scope="col">Unit price</th>
+                <th scope="col">Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                {% with product=item.product %}
+                    <tr>
+                        <td>
+
+                            <a href="{{ url_for('product_detail', _id=product._id,  slug=product.slug) }}">
+                                <div class="image-container">
+                                    <img src="{% if product.image %}
+                                    {{ url_for('static', path=product.image) }}
+                               {% else %}
+                                    {{ url_for('static', path='img/void.png') }}
+                               {% endif %}" alt="image" class="img-fluid">
+                                </div>
+                            </a>
+
+                        </td>
+                        <td>{{ product.name }}</td>
+                        <td>
+                            <form action="{{ url_for('add_to_cart') }}" method="post" class="d-flex "
+                                  enctype="application/x-www-form-urlencoded">
+                                <input type="hidden" id="override_quantity" name="override_quantity" value="true"/>
+                                <input type="hidden" id="product_id" name="product_id" value="{{ product._id }}"/>
+
+                                <div class="input-group">
+                                    <label for="quantity" class="form-label"></label>
+                                    <input type="number" min="1" step="1" class="form-control" id="quantity" name="quantity"
+                                           value="{{ item.quantity }}" style="width: 20px;">
+                                    <button type="submit" class="btn btn-primary" id="button-addon1">Change
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </td>
+                        <td>
+                            <form action="{{ url_for('remove_from_cart') }}"
+                                  method="post">
+                                <button type="submit" class="btn btn-outline-danger mb-3">Remove</button>
+                                <input type="hidden" id="product_id" name="product_id" value="{{ product._id }}"/>
+                            </form>
+                        </td>
+                        <td class="num">${{ item.price }}</td>
+                        <td class="num">${{ item.total_price }}</td>
+                    </tr>
+                {% endwith %}
+            {% endfor %}
+
+            {% if cart.coupon %}
+                <tr class="table-light">
+                    <td>Subtotal</td>
+                    <td colspan="4"></td>
+                    <td>${{ '%0.2f'|format(cart.get_total_price()|float) }}</td>
+                </tr>
+                <tr>
+                    <td>"{{ cart.coupon.code }}" coupon
+                        ({{ cart.coupon.discount }}% off)
+                    </td>
+                    <td colspan="4"></td>
+                    <td class="text-success">– ${{ '%0.2f'|format(cart.get_discount()|float) }}</td>
+                </tr>
+            {% endif %}
+
+            <tr class="total">
+                <td>Total</td>
+                <td colspan="4"></td>
+                <td class="num">${{ '%0.2f'|format(cart.get_total_price_after_discount()|float) }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <p>Apply a coupon:</p>
+
+        <form class="row row-cols-lg-auto g-3 justify-content-between mb-3" action="{{ url_for('coupon_apply') }}"
+              method="post">
+            <div class="col-12">
+                <div class="input-group">
+                    <button class="btn btn-outline-success" type="submit" id="button-addon1">Apply</button>
+                    <input required type="text" class="form-control" placeholder="enter the code" name="coupon_code"
+                           aria-describedby="button-addon1">
+
+                </div>
+            </div>
+            <div class="col-12">
+                <a href="{{ url_for('product_list_endpoint') }}" class="btn btn-outline-info" role="button"
+                   aria-disabled="true">
+                    Continue shopping</a>
+                <a href="{{ url_for('order_create') }}" class="btn btn-info
+            {% if items | length == 0 %}disabled{% endif %}" role="button" aria-disabled="true">
+                    Checkout</a>
+            </div>
+
+        </form>
+
+{% if recommendations %}
+            <div class="row">
+                <h3>People who bought this also bought</h3>
+                {% for p in recommendations %}
+                    <div class="col-3 col-md-2 ">
+                        <a href="{{ url_for('product_detail', _id=p._id,  slug=p.slug) }}">
+                            <img class="card-img-top img-fluid" src="
+                                       {% if p.image %}
+                                            {{ url_for('static', path=p.image) }}
+                                       {% else %}
+                                            {{ url_for('static', path='img/void.png') }}
+                                       {% endif %}"
+                                 alt="image">
+                        </a>
+                        <p><a class="text-decoration-none text-dark"
+                              href="{{ url_for('product_detail', _id=p._id,  slug=p.slug) }}">{{ p.name }}</a></p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+
+
+
+
+{% endblock %}

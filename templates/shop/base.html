@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}My shop{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="{{ url_for('static', path='css/style.css') }}" rel="stylesheet">
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary p-2 bg-info-subtle">
+    <div class="container-fluid">
+
+
+        <a href="{{ url_for('product_list_endpoint') }}" class="navbar-brand">My shop</a>
+
+        {% if admin %}
+            <a href="{{ url_for('get_admin') }}" class="text-decoration-none text-dark">Admin Page</a>
+        {% else %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                    </li>
+                </ul>
+
+                <div>
+                    {% with total_items=cart|length %}
+                        {% if total_items > 0 %}
+                            <a role="button" href="{{ url_for('cart_detail') }}" class="btn btn-dark position-relative">
+                                Cart
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ cart|length }}
+                            </span>
+                            </a>
+                        {% else %}
+                            Your cart is empty.
+                        {% endif %}
+                    {% endwith %}
+
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+    </div>
+</nav>
+<div class="container pt-3">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="row">
+                <div class="col-4 d-none d-lg-block"></div>
+
+                <div class="col mx-4 alert alert-{{ message.tags }} text-center"> {{ message }}</div>
+                <div class="col-4 d-none d-lg-block"></div>
+
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+
+{% block content %}
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+        crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+
+
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+      rel="stylesheet" type="text/css"/>
+<script>
+    $(document).ready(function ($) {
+        $(".table-link-child").click(function () {
+            window.document.location = $(this).parent().data("href");
+        });
+    });
+    $(document).ready(function ($) {
+        $(".table-link").click(function () {
+            window.document.location = $(this).data("href");
+        });
+    });
+
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+</script>
+<script src="{{ url_for('static', path='js/bootstrap_alert.js') }}"></script>
+</body>
+</html>

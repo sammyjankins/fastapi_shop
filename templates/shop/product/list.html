@@ -1,0 +1,71 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="d-flex flex-nowrap">
+        <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
+            <h3 class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">Categories</h3>
+            <hr>
+
+
+            <ul class="nav nav-pills flex-column mb-auto navbar-custom ">
+                <li class="nav-item">
+                    <a href="{{ url_for('product_list_endpoint') }}" aria-current="page"
+                       class="nav-link {% if not category %}active{% endif %}">
+                        All</a>
+                </li>
+                {% for c in categories %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('product_list_by_category_endpoint', category_slug=c.slug) }}"
+                           class="nav-link {% if category and category.slug==c.slug %}active{% endif %}">{{ c.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+        <div class="d-flex flex-column p-3 flex-grow-1">
+
+
+            <div class="row">
+                <div class="col"></div>
+                <h1>{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1>
+                <hr>
+
+            </div>
+
+            <div class="container row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 w-75">
+                {% for product in products %}
+                    <div class="col">
+                        <div class="card container pt-2">
+                            <a href="{{ url_for('product_detail', _id=product._id,  slug=product.slug) }}">
+                                <img class="card-img-top img-fluid" src="
+                               {% if product.image %}
+                                    {{ url_for('static', path=product.image) }}
+                               {% else %}
+                                    {{ url_for('static', path='img/void.png') }}
+                               {% endif %}"
+                                     alt="image">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a class="text-decoration-none text-dark"
+                                       href="{{ url_for('product_detail', _id=product._id, slug=product.slug) }}">{{ product.name }}</a>
+
+                                </h5>
+                                <p class="card-text text-truncate">{{ product.description }}</p>
+                                ${{ product.price }}
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

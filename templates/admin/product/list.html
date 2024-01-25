@@ -1,0 +1,60 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Admin products list
+{% endblock %}
+
+{% block content1 %}
+    <form action="{{ url_for('admin_objects_delete_endpoint', model='product') }}" method="post">
+        <div id="snackbar" class="snackbar">ID Copied!</div>
+        <table class="table table-hover text-center">
+            <tr>
+                <th scope="col"><input class="form-check-input" type="checkbox" id="masterCheckbox"
+                                       aria-label="delete"> Delete
+                </th>
+                <th scope="col"></th>
+                <th scope="col" class="text-start">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Category</th>
+                <th scope="col">Price</th>
+                <th scope="col">Available</th>
+                <th scope="col">Created</th>
+                <th scope="col">Updated</th>
+            </tr>
+            {% for product in products %}
+                <tr class="table-row" data-href="{{ url_for('admin_product_edit_endpoint', _id=product._id) }}">
+                    <td><input class="form-check-input mt-0 childCheckbox" type="checkbox" name="delete"
+                               aria-label="to-delete-checkbox" value="{{ product._id }}"></td>
+                    <td class="text-end"><a href="#" data-bs-toggle="tooltip" data-bs-title="Click to copy ID"
+                                            class="text-decoration-none text-dark id-copy-link"
+                                            id="{{ product._id }}">⧉</a></td>
+                    <td class="table-link-child text-start">{{ product._id }}</td>
+                    <td class="table-link-child">{{ product.name }}</td>
+                    <td class="table-link-child">{{ product.category_name }}</td>
+                    <td class="table-link-child">{{ product.price }}$</td>
+                    <td class="table-link-child
+                                    {% if product.available %} table-success
+                                    {% else %} table-danger {% endif %}"></td>
+                    <td class="table-link-child">{{ product.created }}</td>
+                    <td class="table-link-child">{{ product.updated }}</td>
+                </tr>
+
+            {% endfor %}
+            <tr class="table-row">
+                <td class="table-link table-info" data-href="{{ url_for('admin_product_create_endpoint') }}"
+                    colspan="10">
+                    Add new product
+                </td>
+            </tr>
+            <tr class="table-row" style="transform: rotate(0);">
+                <td colspan="10" class="table-danger p-0">
+                    <button type="submit" class="btn stretched-link submit-button"
+                            disabled>Delete selected
+                    </button>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+    <script src="{{ url_for('static', path='js/list_rows_delete.js') }}"></script>
+{% endblock %}

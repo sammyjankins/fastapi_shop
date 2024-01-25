@@ -1,0 +1,148 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Admin order create
+{% endblock %}
+
+{% block content1 %}
+
+    <div class="container">
+        <div id="liveAlertPlaceholder"></div>
+        <h1>Create a new order</h1>
+
+        <div class="row p-2 ">
+
+
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+
+
+                <form action="{{ url_for('admin_order_create_endpoint') }}" method="post" class="row g-3"
+                      enctype="application/x-www-form-urlencoded" name="object_create">
+
+                    <div class="input-group">
+                        <span class="input-group-text">First and last name</span>
+                        <input required type="text" aria-label="First name" class="form-control" name="first_name"
+                                {% if form %} value="{{ form.first_name }}{% endif %}">
+                        <input required type="text" aria-label="Last name" class="form-control" name="last_name"
+                                {% if form %} value="{{ form.last_name }}{% endif %}">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-text">Email</span>
+                        <input required type="text" aria-label="Email" class="form-control" name="email"
+                                {% if form %} value="{{ form.email }}{% endif %}">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-text">City and postal code</span>
+                        <input required type="text" aria-label="City" class="form-control" name="city"
+                                {% if form %} value="{{ form.city }}{% endif %}">
+                        <input required type="text" aria-label="Postal code" class="form-control" name="postal_code"
+                                {% if form %} value="{{ form.postal_code }}{% endif %}">
+
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-text">Address</span>
+                        <input required type="text" aria-label="Address" class="form-control" name="address"
+                                {% if form %} value="{{ form.address }}{% endif %}">
+
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-group-text" for="coupon">Options</label>
+                        <select class="form-select mt-0" aria-label="Category select" id="coupon" name="coupon">
+                            {% if form and form.coupon %}
+                                <option selected value="{{ coupon._id }}">{{ coupon.code }}</option>
+                                <option value="">remove coupon</option>
+                            {% else %}
+                                <option selected value="">Choose coupon</option>
+                            {% endif %}">
+                            {% for coupon in coupons_list %}
+                                <option value="{{ coupon._id }}">{{ coupon.code }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" name="paid"
+                                   aria-label="is-paid-checkbox"
+                                    {% if form and form.paid %} checked {% endif %}>
+                        </div>
+                        <span class="input-group-text" id="inputGroup-sizing-default" aria-label="is-paid-checkbox">Is the order paid?</span>
+                    </div>
+
+
+                    <h4>Items</h4>
+                    <hr>
+                    <div id="create_items">
+
+                        <div>
+                            <div class="input-group" id="ord_item_1">
+                                <span class="input-group-text" aria-label="order-item">New Item</span>
+                                <input required type="text" aria-label="order-item" class="form-control"
+                                       placeholder="Product ID" name="products">
+                                <input required type="number" min="1" step="1" aria-label="order-item"
+                                       class="form-control"
+                                       placeholder="Quantity" name="quantities" oninput="validateQuantity(this)">
+                                <button onclick="remove_field(1)"
+                                        class="btn btn-outline-danger" type="button">Del
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="button" id="more_fields" onclick="add_fields();"
+                           class="btn btn-outline-info" value="Add more"/>
+
+                    <hr>
+
+                    <input type="hidden" name="next_page" value="">
+
+                    <button type="submit" class="btn btn-info"
+                            onclick="setNextPageValue.call(this, 'edit')">Create
+                    </button>
+
+                    <button type="submit" class="btn btn-outline-success"
+                            onclick="setNextPageValue.call(this, 'create')">Save and Create Another
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        var ord_item = 1;
+
+
+        function add_fields() {
+            ord_item++;
+            var objTo = document.getElementById('create_items')
+            var divtest = document.createElement("div");
+            divtest.innerHTML =
+                '<div class="input-group mt-3"  id="ord_item_' + ord_item +
+                '"><span class="input-group-text">New Item</span><input required type="text"' +
+                'aria-label="First name" class="form-control" placeholder="Product ID"' +
+                ' name="products"><input required type="text" aria-label="Last name" class="form-control" ' +
+                'placeholder="Quantity" name="quantities"><button onclick="remove_field(' + ord_item +
+                ')"class="btn btn-outline-danger" type="button">Del</button></div>';
+
+            objTo.appendChild(divtest)
+
+
+        }
+
+        function remove_field(id) {
+            if (ord_item === 1) {
+                appendAlert("You have to add at least one order item!", 'danger');
+            } else {
+                var elem = document.getElementById('ord_item_' + id);
+                elem.parentNode.removeChild(elem);
+                ord_item--;
+            }
+        }
+
+    </script>
+    <script src="{{ url_for('static', path='js/next_page_select.js') }}"></script>
+    <script src="{{ url_for('static', path='js/quantity_validator.js') }}"></script>
+{% endblock %}

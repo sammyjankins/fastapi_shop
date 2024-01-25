@@ -1,0 +1,78 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    Order
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>Your order</h1>
+
+        <table class="table table-secondary">
+            <thead>
+            <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Unit price</th>
+                <th scope="col">Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in order.items %}
+                    <tr>
+                        <td>
+                            <div class="image-container">
+                                <img src="{% if products[item.product_id].image %}
+                                    {{ url_for('static', path=products[item.product_id].image) }}
+                               {% else %}
+                                    {{ url_for('static', path='img/void.png') }}
+                               {% endif %}" alt="image" class="img-fluid">
+                            </div>
+
+                        </td>
+                        <td>{{ products[item.product_id].name }}</td>
+                        <td>
+                            {{ item.quantity }}
+                        </td>
+                        <td class="num">${{ item.price }}</td>
+                        <td class="num">${{ item.get_cost() }}</td>
+                    </tr>
+            {% endfor %}
+
+            {% if order.coupon %}
+                <tr class="table-light">
+                    <td>Subtotal</td>
+                    <td colspan="3"></td>
+                    <td>${{ '%0.2f'|format(order.get_total_cost_before_discount()|float) }}</td>
+                </tr>
+                <tr>
+                    <td>"{{ order.coupon.code }}" coupon
+                        ({{ order.discount }}% off)
+                    </td>
+                    <td colspan="3"></td>
+                    <td class="text-success">– ${{ '%0.2f'|format(order.get_discount()|float) }}</td>
+                </tr>
+            {% endif %}
+
+
+            <tr class="total">
+                <td>Total</td>
+                <td colspan="3"></td>
+                <td class="num">${{ '%0.2f'|format(order.get_total_cost()|float) }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <form action="{{ url_for('payment_process_post') }}" method="post">
+                <button type="submit" class="btn btn-info">Pay now</button>
+            </form>
+
+        </div>
+    </div>
+
+
+
+
+{% endblock %}

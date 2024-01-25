@@ -1,0 +1,31 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Confirm to Delete
+{% endblock %}
+
+{% block content1 %}
+    <div class="container">
+        <div class="row">
+            <div class="col-3 d-none d-lg-block"></div>
+
+            <div class="col px-4 py-2 my-2">
+                <div class="card border-danger mb-3">
+                    <div class="card-header">Delete {{ delete|length }} objects of class {{ model }}</div>
+                    <div class="card-body text-danger">
+                        <form action="{{ url_for('admin_objects_delete_confirm_endpoint', model=model) }}" method="post">
+                            <h5 class="card-title">Press the button below to delete {{ delete|length }}
+                                objects of class {{ model }}</h5>
+                            <input type="hidden" name="delete" value="{{ delete }}">
+                            <input type="submit" class="btn btn-outline-danger mt-3" role="button"
+                                   aria-disabled="true" value="Delete">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 d-none d-lg-block"></div>
+
+        </div>
+    </div>
+{% endblock %}

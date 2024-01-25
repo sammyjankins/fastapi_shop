@@ -1,0 +1,77 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Admin coupon edit
+{% endblock %}
+
+{% block content1 %}
+    <div class="container">
+        <div id="liveAlertPlaceholder"></div>
+        <h1>Edit coupon {{ coupon.name }}</h1>
+
+        <div class="row p-2 ">
+
+
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+
+                <h3>{{ coupon._id }}</h3>
+                <form action="{{ url_for('admin_coupon_edit_endpoint', _id=coupon._id) }}" method="post" class="row g-3"
+                      enctype="application/x-www-form-urlencoded" name="coupon_edit">
+
+                    <div class="input-group">
+                        <span class="input-group-text">Code</span>
+                        <input required type="text" aria-label="Code" class="form-control" name="code"
+                               value="{{ coupon.code }}">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-text">Valid from</span>
+                        <input required type="datetime-local" aria-label="Valid from" class="form-control"
+                               name="valid_from"
+                               value="{{ coupon.valid_from }}">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-text">Valid to</span>
+                        <input required type="datetime-local" aria-label="Valid to" class="form-control" name="valid_to"
+                               value="{{ coupon.valid_to }}">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-text">Discount</span>
+                        <input required type="number" min="1" max="100" step="1" aria-label="Discount"
+                               class="form-control"
+                               name="discount" oninput="validateDiscount(this)"
+                               value="{{ coupon.discount }}">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" name="active"
+                                   aria-label="is-active-checkbox"
+                                    {% if coupon.active %} checked {% endif %}>
+                        </div>
+                        <span class="input-group-text" id="inputGroup-sizing-default" aria-label="is-active-checkbox">
+                            Is the coupon active?</span>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-info">Edit</button>
+
+                    <a href="{{ url_for('admin_coupon_create_endpoint') }}"
+                       class="btn btn-outline-success mt-3" role="button">
+                        Create another coupon</a>
+
+                    <a href="{{ url_for('admin_coupon_delete_endpoint', _id=coupon._id) }}"
+                       class="btn btn-outline-danger mt-3" role="button"
+                       aria-disabled="true">
+                        Delete</a>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', path='js/discount_validator.js') }}"></script>
+    <script src="{{ url_for('static', path='js/next_page_select.js') }}"></script>
+{% endblock %}

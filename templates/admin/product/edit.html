@@ -1,0 +1,88 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Admin product edit
+{% endblock %}
+
+{% block content1 %}
+
+    <div class="container">
+        <div id="liveAlertPlaceholder"></div>
+        <h1>Edit product {{ product.name }}</h1>
+
+        <div class="row p-2 ">
+
+
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+
+                <h3>{{ product._id }}</h3>
+                <form action="{{ url_for('admin_product_edit_endpoint', _id=product._id) }}" method="post"
+                      class="row g-3"
+                      enctype="multipart/form-data" name="product_edit">
+
+                    <label for="category" class="form-label mt-3">Category name</label>
+                    <select class="form-select mt-0" aria-label="Category select" id="category" name="category_id">
+                        <option selected value="{{ product.category_id }}">{{ product.category_name }}</option>
+                        {% for cat in categories_list %}
+                            <option value="{{ cat._id }}">{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control mt-0" id="name" name="name"
+                           value="{{ product.name }}">
+                    <label for="slug" class="form-label">Slug</label>
+                    <input type="text" class="form-control mt-0" id="slug" name="slug"
+                           placeholder="{{ product.slug }}" disabled readonly>
+
+                    <hr>
+                    <div class="row">
+                        <label for="image" class="form-label">Image of product</label>
+                        <div class="col-md-6">
+                            <img class="img-thumbnail img-max"
+                                 src="{% if product.image %}
+                                {{ url_for('static', path=product.image) }}
+                              {% else %}
+                                {{ url_for('static', path='img/void.png') }}
+                              {% endif %}"
+                                 alt="{{ product.image }}">
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" type="file" id="image" name="image">
+                        </div>
+                    </div>
+                    <hr>
+
+                    <label for="price" class="form-label">Price</label>
+                    <input type="number" min="0.01" step="0.01" required class="form-control mt-0" id="price"
+                           name="price"
+                           value="{{ product.price }}" oninput="validatePrice(this)">
+
+                    <label for="description" class="form-label">Product description</label>
+                    <textarea rows="3" class="form-control mt-0" id="description"
+                              name="description">{{ product.description }}</textarea>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="available" name="available"
+                                {% if product.available %} checked {% endif %}>
+                        <label class="form-check-label" for="available">Is product available</label>
+                    </div>
+
+                    <input type="hidden" name="_id" value="{{ product._id }}">
+
+                    <button type="submit" class="btn btn-info">Edit</button>
+
+                    <a href="{{ url_for('admin_product_create_endpoint') }}"
+                       class="btn btn-outline-success mt-3" role="button">
+                        Create another product</a>
+
+                    <a href="{{ url_for('admin_product_delete_endpoint', _id=product._id) }}"
+                       class="btn btn-outline-danger mt-3" role="button"
+                       aria-disabled="true">
+                        Delete</a>
+
+                </form>
+            </div>
+        </div>
+    </div><script src="{{ url_for('static', path='js/price_validator.js') }}"></script>
+{% endblock %}

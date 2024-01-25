@@ -1,0 +1,43 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    Auth Page
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-3 d-none d-lg-block"></div>
+
+            <div class="col px-4 py-2 my-2">
+                <div class="card px-4 py-4">
+                    <div class="container">
+                        <form action="{{ url_for('login') }}" method="post" class="row g-3"
+                              enctype="application/x-www-form-urlencoded" name="login">
+
+                            <div class="row mb-3">
+                                <label for="inputEmail3" class="form-label">Username</label>
+                                <div>
+                                    <input type="text" class="form-control" id="inputEmail3" name="username">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="inputPassword3" class="form-label">Password</label>
+                                <div>
+                                    <input type="password" class="form-control" id="inputPassword3" name="password">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Sign in</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 d-none d-lg-block"></div>
+
+        </div>
+    </div>
+{% endblock %}

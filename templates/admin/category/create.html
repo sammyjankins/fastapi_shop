@@ -1,0 +1,42 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Admin category create
+{% endblock %}
+
+{% block content1 %}
+    <div id="liveAlertPlaceholder"></div>
+    <div class="container">
+
+        <h1>Create a new category</h1>
+
+        <div class="row p-2 ">
+
+
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+
+
+                <form action="{{ url_for('admin_category_create_endpoint') }}" method="post" class="row g-3"
+                      enctype="application/x-www-form-urlencoded" name="category_create">
+                    <label for="name" class="form-label">Create</label>
+                    <input type="text" class="form-control mt-0" id="name" name="name"
+                           placeholder="Category Name" {% if form %} value="{{ form.name }}{% endif %}">
+
+                    <input type="hidden" name="next_page" value="">
+
+
+                    <button type="submit" class="btn btn-info"
+                            onclick="setNextPageValue.call(this, 'edit')">Create
+                    </button>
+
+                    <button type="submit" class="btn btn-outline-success"
+                            onclick="setNextPageValue.call(this, 'create')">Save and Create Another
+                    </button>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', path='js/next_page_select.js') }}"></script>
+{% endblock %}

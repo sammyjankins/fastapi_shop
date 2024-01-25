@@ -1,0 +1,46 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Admin category edit
+{% endblock %}
+
+{% block content1 %}
+
+    <div class="container">
+
+        <h1>Edit category {{ category.name }}</h1>
+
+        <div class="row p-2 ">
+
+
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+
+                <h3>{{ category._id }}</h3>
+                <form action="{{ url_for('admin_category_edit_endpoint', _id=category._id) }}" method="post"
+                      class="row g-3"
+                      enctype="application/x-www-form-urlencoded" name="category_edit">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name"
+                           value="{{ category.name }}">
+                    <label for="slug" class="form-label">Slug</label>
+                    <input type="text" class="form-control" id="slug" name="slug"
+                           placeholder="{{ category.slug }}" disabled readonly>
+                    <input type="hidden" name="_id" value="{{ category._id }}">
+
+                    <button type="submit" class="btn btn-info">Edit</button>
+
+                    <a href="{{ url_for('admin_category_create_endpoint') }}"
+                       class="btn btn-outline-success mt-3" role="button">
+                        Create category order</a>
+
+                    <a href="{{ url_for('admin_category_delete_endpoint', _id=category._id) }}"
+                       class="btn btn-outline-danger mt-3" role="button"
+                       aria-disabled="true">
+                        Delete</a>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', path='js/next_page_select.js') }}"></script>
+{% endblock %}

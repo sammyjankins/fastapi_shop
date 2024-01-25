@@ -1,0 +1,103 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    Order
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+
+        <h1>Placing the order</h1>
+
+        <div class="row p-2 ">
+
+
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+
+
+                <form action="{{ url_for('order_created') }}" method="post" class="row g-3"
+                      enctype="application/x-www-form-urlencoded" name="order_data">
+                    <label for="first_name" class="form-label"></label>
+                    <input required type="text" class="form-control" id="first_name" name="first_name"
+                           placeholder="First Name">
+
+                    <label for="last_name" class="form-label"></label>
+                    <input required type="text"  class="form-control" id="last_name" name="last_name"
+                           placeholder="Last Name">
+
+                    <label for="email" class="form-label"></label>
+                    <input required type="email" class="form-control" id="email" name="email"
+                           placeholder="Email">
+
+                    <label for="address" class="form-label"></label>
+                    <input required type="text" class="form-control" id="address" name="address"
+                           placeholder="Address">
+
+                    <label for="postal_code" class="form-label"></label>
+                    <input required type="text" class="form-control" id="postal_code" name="postal_code"
+                           placeholder="Postal Code">
+
+                    <label for="city" class="form-label"></label>
+                    <input required type="text" class="form-control" id="city" name="city"
+                           placeholder="City">
+
+                    <button type="submit" class="btn btn-info">Place Order</button>
+
+                    <a href="{{ url_for('product_list_endpoint') }}" class="btn btn-outline-info" role="button"
+                       aria-disabled="true">
+                        Continue shopping</a>
+
+                </form>
+            </div>
+
+            <div class="col-12 col-md-6">
+
+                <div class="card border-secondary mb-3">
+                    <div class="card-header"><h4>Your order</h4></div>
+                    <div class="card-body text-secondary">
+
+                        <ul class="list-group list-group-flush">
+                            {% for item in items %}
+
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">{{ item.product.name }}</div>
+                                        ${{ item.price }}
+                                    </div>
+                                    <span class="badge bg-dark rounded-pill">{{ item.quantity }}</span>
+                                </li>
+
+
+                            {% endfor %}
+
+                            {% if cart.coupon %}
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">"{{ cart.coupon.code }}" coupon</div>
+                                        {{ cart.coupon.discount }}% off
+                                    </div>
+                                    <span class="badge bg-success rounded-pill">
+                                        – ${{ '%0.2f'|format(cart.get_discount()|float) }}</span>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+
+
+                    </div>
+                    <div class="text-dark text-end fw-bold card-footer">
+                        Total price: ${{ '%0.2f'|format(cart.get_total_price_after_discount()|float) }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+{% endblock %}

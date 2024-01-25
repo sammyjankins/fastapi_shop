@@ -1,0 +1,50 @@
+.navbar-custom {
+    background-color: #e0e5ff;
+}
+.navbar-custom .nav-link {
+    color: rgba(0, 0, 0, 0.5);
+    padding: .75rem 1rem;
+}
+
+.navbar-custom .nav-link.active,
+.navbar-custom .nav-item:hover .nav-link{
+    color: #ffffff;
+    background-color: #5554b9;
+}
+.image-container {
+    max-width: 200px;
+    min-width: 100px;
+    margin: 0 auto;
+}
+
+ .table-row:hover{
+  cursor: pointer;
+}
+
+.img-max {
+  max-width: 150px;
+  width:100%;
+}
+
+.highlight-input {
+    border-color: red !important;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5) !important;
+}
+.submit-button {
+    border: none;
+}
+
+.snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+}

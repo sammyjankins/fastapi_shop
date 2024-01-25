@@ -1,0 +1,77 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Admin coupon create
+{% endblock %}
+
+{% block content1 %}
+
+    <div id="liveAlertPlaceholder"></div>
+    <div class="container">
+        <h1>Create a new coupon</h1>
+
+        <div class="row p-2 ">
+
+
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+
+
+                <form action="{{ url_for('admin_coupon_create_endpoint') }}" method="post" class="row g-3"
+                      enctype="application/x-www-form-urlencoded" name="object_create">
+
+                    <div class="input-group">
+                        <span class="input-group-text">Code</span>
+                        <input required type="text" aria-label="Code" class="form-control" name="code"
+                                {% if form %} value="{{ form.code }}{% endif %}">
+                    </div>
+
+
+                    <div class="input-group">
+                        <span class="input-group-text">Valid from</span>
+                        <input required type="datetime-local" aria-label="Valid from" class="form-control"
+                               name="valid_from"
+                                {% if form %} value="{{ form.valid_from }}{% endif %}">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-text">Valid to</span>
+                        <input required type="datetime-local" aria-label="Valid to" class="form-control" name="valid_to"
+                                {% if form %} value="{{ form.valid_to }}{% endif %}">
+                    </div>
+
+
+                    <div class="input-group">
+                        <span class="input-group-text">Discount</span>
+                        <input required type="number" min="1" max="100" step="1" aria-label="Discount"
+                               class="form-control" name="discount" oninput="validateDiscount(this)"
+                                {% if form %} value="{{ form.discount }}{% endif %}">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" name="active"
+                                   aria-label="is-active-checkbox"
+                                    {% if form and form.actvie %} checked {% endif %}>
+                        </div>
+                        <span class="input-group-text" id="inputGroup-sizing-default" aria-label="is-active-checkbox">
+                            Is the coupon active?</span>
+                    </div>
+
+
+                    <input type="hidden" name="next_page" value="">
+
+                    <button type="submit" class="btn btn-info"
+                            onclick="setNextPageValue.call(this, 'edit')">Create
+                    </button>
+
+                    <button type="submit" class="btn btn-outline-success"
+                            onclick="setNextPageValue.call(this, 'create')">Save and Create Another
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', path='js/next_page_select.js') }}"></script>
+    <script src="{{ url_for('static', path='js/discount_validator.js') }}"></script>
+{% endblock %}

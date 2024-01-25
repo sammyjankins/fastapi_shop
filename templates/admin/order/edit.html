@@ -1,0 +1,201 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Admin order edit
+{% endblock %}
+
+{% block content1 %}
+
+    <div class="container">
+        <div id="liveAlertPlaceholder"></div>
+        <h1>Edit order {{ order._id }}</h1>
+
+        <div class="row p-2 ">
+
+
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+
+
+                <form action="{{ url_for('admin_order_edit_endpoint', _id=order._id) }}" method="post" class="row g-3"
+                      enctype="application/x-www-form-urlencoded" name="order_edit" onsubmit="return validateForm()">
+
+                    <div class="input-group">
+                        <span class="input-group-text">First and last name</span>
+                        <input required type="text" aria-label="First name" class="form-control" name="first_name"
+                               value="{{ order.first_name }}">
+                        <input required type="text" aria-label="Last name" class="form-control" name="last_name"
+                               value="{{ order.last_name }}">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-text">Email</span>
+                        <input required type="text" aria-label="Email" class="form-control" name="email"
+                               value="{{ order.email }}">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-text">City and postal code</span>
+                        <input required type="text" aria-label="City" class="form-control" name="city"
+                               value="{{ order.city }}">
+                        <input required type="text" aria-label="Postal code" class="form-control" name="postal_code"
+                               value="{{ order.postal_code }}">
+
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-text">Address</span>
+                        <input required type="text" aria-label="Address" class="form-control" name="address"
+                               value="{{ order.address }}">
+
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-group-text" for="coupon">Coupon</label>
+                        <select class="form-select mt-0" aria-label="Category select" id="coupon" name="coupon">
+                            {% if coupon %}
+                                <option selected value="{{ coupon._id }}">{{ coupon.code }}</option>
+                                <option value="">remove coupon</option>
+                            {% else %}
+                                <option selected value="">Choose coupon</option>
+                            {% endif %}">
+                            {% for cpn in coupons_list %}
+                                <option value="{{ cpn._id }}">{{ cpn.code }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" name="paid"
+                                   aria-label="is-paid-checkbox"
+                                    {% if order.paid %} checked {% endif %}>
+                        </div>
+                        <span class="input-group-text" id="inputGroup-sizing-default" aria-label="is-paid-checkbox">Is the order paid?</span>
+                    </div>
+
+
+                    <h4>Items</h4>
+                    <hr>
+                    <div id="created_items">
+                        {% if not items %}
+                            {% set items = order.items %}
+                        {% endif %}
+                        {% for item in items %}
+                            <div>
+                                <div class="input-group mt-0">
+                                    <input type="hidden" name="products" value="item_{{ item._id }}">
+                                    <div class="input-group-text">{{ item.product_name }}</div>
+                                    <div class="input-group-text">{{ item.product_id }}</div>
+                                    <div class="input-group-text">${{ '%0.2f'|format(item.get_cost()|float) }}</div>
+                                    <input required type="number" min="1" step="1" aria-label="order-item"
+                                           class="form-control"
+                                           placeholder="Quantity" name="quantities" value="{{ item.quantity }}"
+                                           oninput="validateQuantity(this)">
+
+                                    <div class="input-group-text">
+                                        <input class="form-check-input mt-0" data-bs-toggle="tooltip"
+                                               data-bs-title="Check to remove the item" type="checkbox" name="delete"
+                                               aria-label="to-delete-checkbox" value="{{ item._id }}">
+                                    </div>
+                                    <span class="input-group-text border border-danger-subtle border-2"
+                                          id="inputGroup-sizing-default"
+                                          aria-label="is-paid-checkbox">Delete</span>
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <hr>
+                    <div id="create_items">
+
+                        <div>
+                            <div class="input-group" id="ord_item_1">
+                                <span class="input-group-text">New Item</span>
+                                <input type="text" aria-label="Products" class="form-control"
+                                       placeholder="Product ID" name="products" id="products_1">
+                                <input type="number" min="1" step="1" aria-label="Quantities" class="form-control"
+                                       placeholder="Quantity" name="quantities" id="quantities_1"
+                                       oninput="validateQuantity(this)">
+                                <button onclick="remove_field(1)"
+                                        class="btn btn-outline-danger" type="button">Del
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="button" id="more_fields" onclick="add_fields();"
+                           class="btn btn-outline-info" value="Add one more item"/>
+
+                    <hr>
+
+                    <button type="submit" class="btn btn-info">Edit</button>
+
+                    <a href="{{ url_for('admin_order_create_endpoint') }}"
+                       class="btn btn-outline-success mt-3" role="button">
+                        Create another order</a>
+
+                    <a href="{{ url_for('admin_order_delete_endpoint', _id=order._id) }}"
+                       class="btn btn-outline-danger mt-3" role="button"
+                       aria-disabled="true">
+                        Delete</a>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        var ord_item = 1;
+
+        function add_fields() {
+            ord_item++;
+            var objTo = document.getElementById('create_items')
+            var divtest = document.createElement("div");
+            divtest.innerHTML =
+                '<div class="input-group mt-3"  id="ord_item_' + ord_item +
+                '"><span class="input-group-text">New Item</span><input required type="text"' +
+                'aria-label="First name" class="form-control" placeholder="Product ID"' +
+                ' name="products"  id="products_' + ord_item + '"><input required type="text" aria-label="Last name"' +
+                ' class="form-control" placeholder="Quantity" name="quantities"  id="quantities_' + ord_item +
+                '"><button onclick="remove_field(' + ord_item + ')"class="btn btn-outline-danger" ' +
+                'type="button">Del</button></div>';
+
+            objTo.appendChild(divtest)
+
+
+        }
+
+        function remove_field(id) {
+            var elem = document.getElementById('ord_item_' + id);
+            elem.parentNode.removeChild(elem);
+            ord_item--;
+        }
+
+        function validateForm() {
+            const productsInput = document.getElementById('products_1');
+            const quantitiesInput = document.getElementById('quantities_1');
+
+            const productsValue = productsInput.value.trim();
+            const quantitiesValue = quantitiesInput.value.trim();
+
+            productsInput.classList.remove('highlight-input');
+            quantitiesInput.classList.remove('highlight-input');
+
+            if (!productsValue && !quantitiesValue) {
+                return true;
+            }
+
+            if (!productsValue) {
+                productsInput.classList.add('highlight-input');
+                return false;
+            }
+
+            if (!quantitiesValue) {
+                quantitiesInput.classList.add('highlight-input');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+    <script src="{{ url_for('static', path='js/quantity_validator.js') }}"></script>
+{% endblock %}

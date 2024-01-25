@@ -1,0 +1,26 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    Payment completed
+{% endblock %}
+
+{% block content %}
+
+    <div class="px-4 py-5 my-5 text-center">
+        <h1 class="display-5 fw-bold text-body-emphasis">Payment process completed</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">Your payment has been processed.</p>
+            {{ order.created.strftime('%B %d, %Y') }}
+            <p>
+                {{ order.first_name }} {{ order.last_name }}<br>
+                {{ order.email }}<br>
+                {{ order.address }}<br>
+                {{ order.postal_code }}, {{ order.city }}
+            </p>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}

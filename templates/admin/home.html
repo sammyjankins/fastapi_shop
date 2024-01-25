@@ -1,0 +1,123 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    Administration
+{% endblock %}
+
+{% block content %}
+
+    <div class="d-flex flex-nowrap">
+        <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
+            <h3 class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">Models</h3>
+            <hr>
+
+
+            <ul class="nav nav-pills flex-column mb-auto navbar-custom ">
+                <li class="nav-item">
+                    <a href="{{ url_for('admin_product_list_endpoint') }}" aria-current="page"
+                       class="nav-link">
+                        Products</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('admin_category_list_endpoint') }}" aria-current="page"
+                       class="nav-link">
+                        Categories</a>
+
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('admin_order_list_endpoint') }}" aria-current="page"
+                       class="nav-link">
+                        Orders</a>
+
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('admin_coupon_list_endpoint') }}" aria-current="page"
+                       class="nav-link">
+                        Coupons</a></li>
+            </ul>
+
+        </div>
+
+        <div class="d-flex flex-column p-3 flex-grow-1">
+
+
+            <div class="row">
+                <div class="col"></div>
+
+                <h3>{% if categories %}Categories
+                    <hr>
+                {% elif products %}Products
+                    <hr>
+                {% elif orders %}Orders
+                    <hr>
+                {% elif coupons %}Coupons
+                    <hr>
+                {% endif %}</h3>
+
+
+            </div>
+            <div class="container row list-group">
+
+                {% if paginator and paginator.last > 1 %}
+
+                    <nav class="nav justify-content-center" aria-label="...">
+                        <ul class="pagination">
+
+                            {% if paginator.previous %}
+                                <li class="page-item">
+                                    <a class="page-link text-dark text-decoration-none
+                                              border-bottom-0  border-top-0 rounded-0"
+                                       href="?page=1">Первая</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link text-dark text-decoration-none
+                                              border-bottom-0  border-top-0 rounded-0"
+                                       href="?page={{ paginator.previous }}"><</a>
+                                </li>
+                            {% endif %}
+                            {% for num in paginator.page_range %}
+                                {% if paginator.page == num %}
+                                    <li class="page-item">
+
+                                        <a class="page-link text-dark text-decoration-none
+                                                  border-bottom-0  border-top-0 rounded-0"
+                                           href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% elif num > paginator.page - 3 and num < paginator.page + 3 %}
+                                    <li class="page-item">
+
+                                        <a class="page-link text-dark text-decoration-none
+                                                  border-bottom-0  border-top-0 rounded-0"
+                                           href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+
+                                {% endif %}
+                            {% endfor %}
+                            {% if paginator.next %}
+                                <li class="page-item">
+
+                                    <a class="page-link text-dark text-decoration-none
+                                              border-bottom-0  border-top-0 rounded-0"
+                                       href="?page={{ paginator.next }}">></a>
+                                </li>
+                                <li class="page-item">
+
+                                    <a class="page-link text-dark text-decoration-none
+                                              border-bottom-0  border-top-0 rounded-0"
+                                       href="?page={{ paginator.last }}">Последняя</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    <hr>
+
+                {% endif %}
+
+
+                {% block content1 %}
+                {% endblock %}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Admin product create
+{% endblock %}
+
+{% block content1 %}
+
+    <div id="liveAlertPlaceholder"></div>
+
+    <div class="container">
+
+        <h1>Create a new product</h1>
+
+        <div class="row p-2 ">
+
+
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+
+
+                <form action="{{ url_for('admin_product_create_endpoint') }}" method="post" class="row g-3"
+                      enctype="multipart/form-data" name="product_create">
+
+                    <label for="category" class="form-label">Category name</label>
+                    <select class="form-select mt-0" aria-label="Category select" id="category" name="category_id">
+                        <option selected>Choose a category</option>
+                        {% for category in categories_list %}
+                            <option value="{{ category._id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="name" class="form-label">Name</label>
+                    <input required type="text" class="form-control mt-0" id="name" name="name"
+                           placeholder="Product Name">
+
+                    <label for="image" class="form-label">Image of product</label>
+                    <input class="form-control mt-0" type="file" id="image" name="image">
+
+                    <label for="price" class="form-label">Price</label>
+                    <input required type="number" min="0.01" step="0.01" class="form-control mt-0"
+                           id="price" name="price"
+                           placeholder="Product Price ($)" oninput="validatePrice(this)">
+
+                    <label for="description" class="form-label">Product description</label>
+                    <textarea required rows="3" class="form-control mt-0" id="description" name="description"
+                              placeholder="Product description"></textarea>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="available" name="available">
+                        <label class="form-check-label" for="available">Is product available</label>
+                    </div>
+
+
+                    <input type="hidden" name="next_page" value="">
+
+                    <button type="submit" class="btn btn-info"
+                            onclick="setNextPageValue.call(this, 'edit')">Create
+                    </button>
+                    <button type="submit" class="btn btn-outline-success"
+                            onclick="setNextPageValue.call(this, 'create')">Save and Create Another
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', path='js/next_page_select.js') }}"></script>
+    <script src="{{ url_for('static', path='js/price_validator.js') }}"></script>
+{% endblock %}

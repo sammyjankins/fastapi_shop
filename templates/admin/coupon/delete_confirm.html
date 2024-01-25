@@ -1,0 +1,29 @@
+{% extends "admin/home.html" %}
+
+{% block title %}
+    Confirm to Delete
+{% endblock %}
+
+{% block content1 %}
+    <div class="container">
+        <div class="row">
+            <div class="col-3 d-none d-lg-block"></div>
+
+            <div class="col px-4 py-2 my-2">
+                <div class="card border-danger mb-3">
+                    <div class="card-header">{{ coupon.code }} ({{ coupon._id }})</div>
+                    <div class="card-body text-danger">
+                        <h5 class="card-title">Press the button below to delete the coupon</h5>
+                        <a href="{{ url_for('admin_coupon_delete_confirm_endpoint', _id=coupon._id) }}"
+                           class="btn btn-outline-danger mt-3" role="button"
+                           aria-disabled="true">
+                            Delete</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 d-none d-lg-block"></div>
+
+        </div>
+    </div>
+{% endblock %}

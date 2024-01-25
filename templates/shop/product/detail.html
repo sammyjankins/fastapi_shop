@@ -1,0 +1,75 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    {{ product.name }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row p-2">
+
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <img class="card-img-top img-fluid" src="
+           {% if product.image %}
+                {{ url_for('static', path=product.image) }}
+           {% else %}
+                {{ url_for('static', path='img/void.png') }}
+           {% endif %}"
+                     alt="image">
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card pt-2">
+                    <div class="card-header">
+                        {{ product.name }} <br>
+                        <a class="text-decoration-none link-secondary"
+                           href="{{ url_for('product_list_by_category_endpoint', category_slug=category.slug) }}">
+                            {{ category.name }}
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <p class="price">${{ product.price }}</p>
+                        <p>{{ product.description }}</p>
+                        <form action="{{ url_for('add_to_cart') }}" method="post" class="row g-3"
+                              enctype="application/x-www-form-urlencoded">
+
+                            <div class="col-md-6">
+                                <label for="quantity" class="form-label"></label>
+                                <input required type="number" min="1" step="1" class="form-control" id="quantity" name="quantity"
+                                       placeholder="Quantity">
+                            </div>
+                            <input type="hidden" id="override_quantity" name="override_quantity" value="false"/>
+                            <input type="hidden" id="product_id" name="product_id" value="{{ product._id }}"/>
+                            <button type="submit" class="btn btn-primary">Add to cart</button>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col d-none d-lg-block"></div>
+        </div>
+        {% if recommendations %}
+            <div class="row">
+                <h3>People who bought this also bought</h3>
+                {% for p in recommendations %}
+                    <div class="col-3 col-md-2 ">
+                        <a href="{{ url_for('product_detail', _id=p._id,  slug=p.slug) }}">
+                            <img class="card-img-top img-fluid" src="
+                                       {% if p.image %}
+                                            {{ url_for('static', path=p.image) }}
+                                       {% else %}
+                                            {{ url_for('static', path='img/void.png') }}
+                                       {% endif %}"
+                                 alt="image">
+                        </a>
+                        <p><a class="text-decoration-none text-dark"
+                              href="{{ url_for('product_detail', _id=p._id,  slug=p.slug) }}">{{ p.name }}</a></p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
