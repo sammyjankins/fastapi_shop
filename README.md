@@ -59,6 +59,7 @@ Using the admin panel you can perform CRUD operations:
 
 ![image](https://github.com/sammyjankins/fastapi_shop/assets/26933434/771f970c-5911-423a-b3ee-c59106f88072)
 
+![image](https://github.com/sammyjankins/fastapi_shop/assets/26933434/d47f560d-ae0a-4519-bb4c-da8bff4a9859)
 
 # Features
 
