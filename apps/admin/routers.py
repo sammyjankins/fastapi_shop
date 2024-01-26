@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from bson.errors import InvalidId
 from fastapi import APIRouter, Request, Depends, Form, HTTPException
 from fastapi.responses import RedirectResponse
@@ -267,15 +269,15 @@ async def admin_order_edit_endpoint(request: Request, _id: str, coupons_list: li
 
     context = {"request": request, "order": order, "coupons_list": coupons_list,
                "coupon": coupon,
-               'admin': True, "items": items, 'messages': []}
+               'admin': True, "items": items}
 
     if request.cookies.get('order_created') == 'True':
-        context['messages'].append(Message(text=f'New order {order["_id"]} has been created', tags='info'))
+        context['messages'] = [Message(text=f'New order {order["_id"]} has been created', tags='info')]
         response = templates.TemplateResponse("admin/order/edit.html", context=context)
         response.set_cookie('order_created', 'False')
     else:
-        if (message := request.cookies.get('error_msg')) != 'False':
-            context['messages'].append(Message(text=message))
+        if (message := request.cookies.get('error_msg')) is not None and message != 'False':
+            context['messages'] = [Message(text=message)]
         response = templates.TemplateResponse("admin/order/edit.html", context=context)
         if request.cookies.get('error_msg') != 'False':
             response.set_cookie('error_msg', 'False')
