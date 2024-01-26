@@ -95,7 +95,7 @@ class PDFReport(FPDF):
 
         table_data = []
         for item in order["items"]:
-            table_data.append([item["product"]["name"], item["price"], item["quantity"],
+            table_data.append([item["product_name"], item["price"], item["quantity"],
                                item["price"] * item["quantity"]])
         headers = ['Product', 'Price', 'Quantity', 'Cost']
         self.colored_table(headers, table_data, order)
