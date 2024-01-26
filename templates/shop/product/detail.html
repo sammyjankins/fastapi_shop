@@ -52,10 +52,11 @@
             <div class="col d-none d-lg-block"></div>
         </div>
         {% if recommendations %}
-            <div class="row">
+            <div class="row mt-3">
+                <hr>
                 <h3>People who bought this also bought</h3>
                 {% for p in recommendations %}
-                    <div class="col-3 col-md-2 ">
+                    <div class="col-3 col-md-2 col-xl-1">
                         <a href="{{ url_for('product_detail', _id=p._id,  slug=p.slug) }}">
                             <img class="card-img-top img-fluid" src="
                                        {% if p.image %}
@@ -66,7 +67,8 @@
                                  alt="image">
                         </a>
                         <p><a class="text-decoration-none text-dark"
-                              href="{{ url_for('product_detail', _id=p._id,  slug=p.slug) }}">{{ p.name }}</a></p>
+                              href="{{ url_for('product_detail', _id=p._id,  slug=p.slug) }}">
+                            {{ p.name }} - ${{ p.price }}</a></p>
                     </div>
                 {% endfor %}
             </div>
